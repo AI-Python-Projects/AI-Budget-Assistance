@@ -218,3 +218,60 @@ def report(result, tag="report"):
         ax.set_title("Budget Utilisation per Category",
                      fontsize=14, fontweight="bold")
         ax.set_xlim(0, max(120, chart_df["% Used"].max() + 20))
+
+        for b, pct in zip(bars, chart_df["% Used"]):
+            ax.text(b.get_width() + 1, b.get_y() + b.get_height()/2,
+                    f"{pct:.1f}%", va="center", fontsize=9)
+
+        ax.legend(loc="lower right")
+        plt.tight_layout()
+        p2 = os.path.join(OUTPUT_DIR, f"assistant_{tag}_utilisation.png")
+        plt.savefig(p2, bbox_inches="tight")
+        plt.close()
+        print(f"[Chart saved] {p2}")
+
+    # ---------------------------------------------------------------
+    # 6. Chart — Pie of spending by category
+    # ---------------------------------------------------------------
+    pie_df = summary_df[summary_df["Spent (R)"] > 0]
+    if not pie_df.empty:
+        fig, ax = plt.subplots(figsize=(9, 9))
+        ax.pie(pie_df["Spent (R)"],
+               labels=pie_df["Category"],
+               autopct="%1.1f%%",
+               startangle=140,
+               textprops={"fontsize": 9})
+        ax.set_title("Spending Distribution",
+                     fontsize=14, fontweight="bold")
+        plt.tight_layout()
+        p3 = os.path.join(OUTPUT_DIR, f"assistant_{tag}_spending_pie.png")
+        plt.savefig(p3, bbox_inches="tight")
+        plt.close()
+        print(f"[Chart saved] {p3}")
+
+    # ---------------------------------------------------------------
+    # 7. Chart — Spend over time (if dates are present)
+    # ---------------------------------------------------------------
+    if any("day_of_month" in d for d in details):
+        txns_by_day = (
+            pd.DataFrame(details)
+              .groupby("day_of_month")["amount"].sum()
+              .reset_index()
+              .sort_values("day_of_month")
+        )
+        if not txns_by_day.empty:
+            fig, ax = plt.subplots(figsize=(11, 5))
+            sns.lineplot(data=txns_by_day, x="day_of_month", y="amount",
+                         marker="o", color="#4C72B0", ax=ax)
+            ax.set_title("Daily Spend over the Month",
+                         fontsize=14, fontweight="bold")
+            ax.set_xlabel("Day of month")
+            ax.set_ylabel("Total spent (R)")
+            plt.tight_layout()
+            p4 = os.path.join(OUTPUT_DIR,
+                              f"assistant_{tag}_daily_spend.png")
+            plt.savefig(p4, bbox_inches="tight")
+            plt.close()
+            print(f"[Chart saved] {p4}")
+
+    # ---------------------------------------------------------------
