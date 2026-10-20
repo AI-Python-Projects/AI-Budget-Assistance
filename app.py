@@ -21,3 +21,19 @@ default = pd.DataFrame({
     "amount":   [11.76, 24.22, 45.00],
 })
 edited = st.data_editor(default, num_rows="dynamic", use_container_width=True)
+
+if st.button("Analyse Spending", type="primary"):
+    txns = [t for t in edited.to_dict(orient="records")
+            if t["merchant"] and t["amount"] > 0]
+
+    totals = {cat: 0.0 for cat in BUDGET}
+    rows = []
+    for t in txns:
+        cat = predict_one(t["merchant"], float(t["amount"]))
+        totals[cat] = totals.get(cat, 0.0) + float(t["amount"])
+        rows.append({"Merchant": t["merchant"],
+                     "Amount (R)": round(float(t["amount"]), 2),
+                     "Category": cat})
+
+    st.subheader("2. Categorised Transactions")
+    st.dataframe(pd.DataFrame(rows), use_container_width=True)
