@@ -37,3 +37,17 @@ if st.button("Analyse Spending", type="primary"):
 
     st.subheader("2. Categorised Transactions")
     st.dataframe(pd.DataFrame(rows), use_container_width=True)
+
+    st.subheader("3. Budget Summary")
+    summary = []
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        pct = (spent / budget * 100) if budget else 0
+        summary.append({
+            "Category": cat,
+            "Spent (R)": round(spent, 2),
+            "Budget (R)": budget,
+            "Remaining (R)": round(budget - spent, 2),
+            "% Used": round(pct, 1),
+        })
+    st.dataframe(pd.DataFrame(summary), use_container_width=True)
