@@ -46,3 +46,51 @@ def show_table(title, df):
     print(f"\n=== {title} ===")
     print(tabulate(df, headers="keys", tablefmt="fancy_grid",
                    floatfmt=",.2f", showindex=False))
+
+                   # =====================================================================
+# Core analysis
+# =====================================================================
+def analyse(transactions):
+    totals = {cat: 0.0 for cat in BUDGET}
+    details = []
+
+    for t in transactions:
+        cat = predict_one(
+            t["merchant"], float(t["amount"]),
+            t.get("day_of_month", 15), t.get("day_of_week", 2),
+            t.get("is_weekend", 0), t.get("is_month_end", 0),
+        )
+        totals[cat] = totals.get(cat, 0.0) + float(t["amount"])
+        details.append({**t, "category": cat})
+
+    alerts = []
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        if budget <= 0:
+            continue
+        ratio = spent / budget
+        remaining = budget - spent
+        if ratio >= DANGER_THRESHOLD:
+            alerts.append({
+                "level": "OVER",
+                "category": cat,
+                "spent": spent,
+                "budget": budget,
+                "remaining": remaining,
+                "pct": ratio * 100,
+                "message": f"OVER BUDGET  - {cat}: spent {money(spent)} of "
+                           f"{money(budget)} (over by {money(abs(remaining))})",
+            })
+        elif ratio >= WARN_THRESHOLD:
+            alerts.append({
+                "level": "WARN",
+                "category": cat,
+                "spent": spent,
+                "budget": budget,
+                "remaining": remaining,
+                "pct": ratio * 100,
+                "message": f"APPROACHING - {cat}: spent {money(spent)} of "
+                           f"{money(budget)} (remaining {money(remaining)})",
+            })
+
+    return {"details": details, "totals": totals, "alerts": alerts}
