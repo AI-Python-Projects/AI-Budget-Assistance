@@ -51,3 +51,20 @@ if st.button("Analyse Spending", type="primary"):
             "% Used": round(pct, 1),
         })
     st.dataframe(pd.DataFrame(summary), use_container_width=True)
+
+
+    st.subheader("4. Alerts")
+    any_alert = False
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        if budget <= 0:
+            continue
+        ratio = spent / budget
+        if ratio >= DANGER_THRESHOLD:
+            st.error(f"OVER BUDGET - {cat}: {money(spent)} of {money(budget)}")
+            any_alert = True
+        elif ratio >= WARN_THRESHOLD:
+            st.warning(f"Approaching - {cat}: {money(spent)} of {money(budget)}")
+            any_alert = True
+    if not any_alert:
+        st.success("All categories within budget.")
