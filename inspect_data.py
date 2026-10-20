@@ -13,3 +13,9 @@ print(df.shape)
 
 print("\n--- First 10 rows ---")
 print(df.head(10).to_string())
+
+print("\n--- Dtypes ---")
+print(df.dtypes)
+
+print("\n--- Missing values ---")
+print(df.isnull().sum())
