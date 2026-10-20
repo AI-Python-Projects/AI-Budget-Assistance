@@ -28,3 +28,16 @@ train_model.py                ← trains the ML categoriser
 budget_assistant.py           ← CLI
 app.py                        ← Streamlit web UI
 ```
+## Setup
+```bash
+pip install -r requirements.txt
+```
+
+## 1. Add your dataset
+Place your transaction dataset at `data/personal_transactions.csv`.
+It must contain at least:
+- a **merchant** (text) column — e.g. `merchant`
+- an **amount** (numeric) column — e.g. `amount`
+- a **category** column — e.g. `category`
+
+If your column names differ, update them once in **`config.py`**.
