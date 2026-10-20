@@ -147,3 +147,74 @@ def report(result, tag="report"):
                       round(total_budget - total_spent, 2)],
     })
     show_table("Overall Totals", totals_df)
+
+    # ---------------------------------------------------------------
+    # 3. Alerts table
+    # ---------------------------------------------------------------
+    if alerts:
+        alerts_df = pd.DataFrame([
+            {"Level": a["level"], "Category": a["category"],
+             "Spent (R)": round(a["spent"], 2),
+             "Budget (R)": round(a["budget"], 2),
+             "Remaining (R)": round(a["remaining"], 2),
+             "% Used": round(a["pct"], 1)}
+            for a in alerts
+        ])
+        show_table("Alerts", alerts_df)
+    else:
+        print("\n=== Alerts ===\n  All categories within budget.")
+
+    # ---------------------------------------------------------------
+    # 4. Chart — Budget vs Spent per category
+    # ---------------------------------------------------------------
+    chart_df = summary_df.copy()
+    chart_df = chart_df[chart_df["Budget (R)"] > 0]
+
+    if not chart_df.empty:
+        fig, ax = plt.subplots(figsize=(12, max(5, 0.5 * len(chart_df))))
+        y = np.arange(len(chart_df))
+        h = 0.4
+        ax.barh(y - h/2, chart_df["Budget (R)"],  height=h,
+                label="Budget",  color="#4C72B0")
+        ax.barh(y + h/2, chart_df["Spent (R)"],   height=h,
+                label="Spent",   color="#DD8452")
+        ax.set_yticks(y)
+        ax.set_yticklabels(chart_df["Category"])
+        ax.set_xlabel("Rand (R)")
+        ax.set_title("Budget vs Spent per Category",
+                     fontsize=14, fontweight="bold")
+        ax.legend()
+
+        # Highlight over-budget bars in red
+        for i, row in enumerate(chart_df.itertuples()):
+            if row._5 >= DANGER_THRESHOLD * 100:   # % Used column
+                ax.text(row._3 + 20, i + h/2, "OVER",
+                        color="red", va="center", fontsize=9, fontweight="bold")
+            elif row._5 >= WARN_THRESHOLD * 100:
+                ax.text(row._3 + 20, i + h/2, "WARN",
+                        color="orange", va="center", fontsize=9, fontweight="bold")
+
+        plt.tight_layout()
+        p1 = os.path.join(OUTPUT_DIR, f"assistant_{tag}_budget_vs_spent.png")
+        plt.savefig(p1, bbox_inches="tight")
+        plt.close()
+        print(f"\n[Chart saved] {p1}")
+
+    # ---------------------------------------------------------------
+    # 5. Chart — % Used gauge (horizontal bars)
+    # ---------------------------------------------------------------
+    if not chart_df.empty:
+        fig, ax = plt.subplots(figsize=(12, max(5, 0.45 * len(chart_df))))
+        colors = ["#d62728" if p >= 100
+                  else "#ff7f0e" if p >= WARN_THRESHOLD * 100
+                  else "#2ca02c"
+                  for p in chart_df["% Used"]]
+        bars = ax.barh(chart_df["Category"], chart_df["% Used"],
+                       color=colors)
+        ax.axvline(100, color="red", linestyle="--", label="Budget limit (100%)")
+        ax.axvline(WARN_THRESHOLD * 100, color="orange",
+                   linestyle=":", label=f"Warning ({int(WARN_THRESHOLD*100)}%)")
+        ax.set_xlabel("% of budget used")
+        ax.set_title("Budget Utilisation per Category",
+                     fontsize=14, fontweight="bold")
+        ax.set_xlim(0, max(120, chart_df["% Used"].max() + 20))
