@@ -62,3 +62,11 @@ Web UI:
 ```bash
 streamlit run app.py
 ```
+## Example Output
+```
+Shoprite      R350.00   →   Food
+Uber          R120.00   →   Transport
+
+Food       Spent R1,850.00 / Budget R2,000.00  ( 92.5%)
+⚠️  APPROACHING — Food: spent R1,850.00 of R2,000.00 (remaining R150.00)
+```
