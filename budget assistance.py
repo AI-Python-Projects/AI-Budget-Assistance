@@ -275,3 +275,56 @@ def report(result, tag="report"):
             print(f"[Chart saved] {p4}")
 
     # ---------------------------------------------------------------
+     # 8. Console alert block (text)
+    # ---------------------------------------------------------------
+    print("\n========== AI BUDGET ASSISTANT REPORT ==========")
+    if alerts:
+        for a in alerts:
+            prefix = "🚨" if a["level"] == "OVER" else "⚠️ "
+            print(f"  {prefix} {a['message']}")
+    else:
+        print("  ✅ All categories within budget.")
+
+
+# =====================================================================
+# Interactive + Batch modes
+# =====================================================================
+def interactive():
+    print("\n=== AI BUDGET ASSISTANT (interactive) ===")
+    print("Type 'done' when finished.\n")
+    txns = []
+    while True:
+        m = input("Merchant : ").strip()
+        if m.lower() == "done":
+            break
+        try:
+            a = float(input("Amount   : ").strip())
+        except ValueError:
+            print("Invalid amount.\n")
+            continue
+        txns.append({"merchant": m, "amount": a})
+        print("Added.\n")
+    report(analyse(txns), tag="interactive")
+
+
+def csv_batch(path):
+    df = pd.read_csv(path)
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.columns = [c.strip() for c in df.columns]
+    df = df.rename(columns={"Description": "merchant", "Amount": "amount"})
+    if "Transaction Type" in df.columns:
+        df = df[df["Transaction Type"].str.lower() == "debit"]
+
+    # keep date features if present
+    txns = df.to_dict(orient="records")
+    report(analyse(txns), tag=os.path.splitext(os.path.basename(path))[0])
+
+
+# =====================================================================
+# Entry point
+# =====================================================================
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        csv_batch(sys.argv[1])
+    else:
+        interactive()
