@@ -41,3 +41,24 @@ It must contain at least:
 - a **category** column — e.g. `category`
 
 If your column names differ, update them once in **`config.py`**.
+
+## 2. Train
+```bash
+python train_model.py
+```
+
+## 3. Run
+CLI (interactive):
+```bash
+python budget_assistant.py
+```
+
+CLI (batch on a CSV of transactions):
+```bash
+python budget_assistant.py data/my_month.csv
+```
+
+Web UI:
+```bash
+streamlit run app.py
+```
