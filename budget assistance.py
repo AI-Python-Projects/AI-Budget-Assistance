@@ -94,3 +94,56 @@ def analyse(transactions):
             })
 
     return {"details": details, "totals": totals, "alerts": alerts}
+    
+# =====================================================================
+# Report + charts
+# =====================================================================
+def report(result, tag="report"):
+    details = result["details"]
+    totals  = result["totals"]
+    alerts  = result["alerts"]
+
+    # ---------------------------------------------------------------
+    # 1. Categorised transactions table
+    # ---------------------------------------------------------------
+    txn_df = pd.DataFrame(details)[["merchant", "amount", "category"]]
+    txn_df.columns = ["Merchant", "Amount (R)", "Category"]
+    txn_df["Amount (R)"] = txn_df["Amount (R)"].round(2)
+    show_table("Categorised Transactions", txn_df)
+
+    # ---------------------------------------------------------------
+    # 2. Budget summary table
+    # ---------------------------------------------------------------
+    rows = []
+    total_spent = total_budget = 0.0
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        total_spent  += spent
+        total_budget += budget
+        pct = (spent / budget * 100) if budget else 0
+        remaining = budget - spent
+        status = "OK"
+        if budget > 0:
+            if pct >= DANGER_THRESHOLD * 100:
+                status = "OVER"
+            elif pct >= WARN_THRESHOLD * 100:
+                status = "WARN"
+        rows.append({
+            "Category": cat,
+            "Budget (R)": round(budget, 2),
+            "Spent (R)": round(spent, 2),
+            "Remaining (R)": round(remaining, 2),
+            "% Used": round(pct, 1),
+            "Status": status,
+        })
+
+    summary_df = pd.DataFrame(rows).sort_values("% Used", ascending=False)
+    show_table("Budget Summary", summary_df)
+
+    totals_df = pd.DataFrame({
+        "Metric": ["Total spent", "Total budget", "Remaining"],
+        "Value (R)": [round(total_spent, 2),
+                      round(total_budget, 2),
+                      round(total_budget - total_spent, 2)],
+    })
+    show_table("Overall Totals", totals_df)
