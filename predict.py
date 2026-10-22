@@ -20,3 +20,29 @@ def predict_one(merchant, amount,
         "is_weekend": is_weekend, "is_month_end": is_month_end,
     }
     return model.predict(pd.DataFrame([row]))[0]
+
+
+def predict_batch(df):
+    for col, default in [
+        ("day_of_month", 15), ("day_of_week", 2),
+        ("is_weekend", 0), ("is_month_end", 0),
+    ]:
+        if col not in df.columns:
+            df[col] = default
+    df["predicted_category"] = model.predict(df[FEATURES])
+    return df
+
+
+def interactive():
+    print("\n=== PREDICT MODE ===")
+    print("Type 'done' when finished.\n")
+    while True:
+        m = input("Merchant : ").strip()
+        if m.lower() == "done":
+            break
+        try:
+            a = float(input("Amount   : ").strip())
+        except ValueError:
+            print("Invalid amount.\n")
+            continue
+        print(f"  -> Predicted category: {predict_one(m, a)}\n")
