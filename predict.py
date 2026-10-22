@@ -46,3 +46,27 @@ def interactive():
             print("Invalid amount.\n")
             continue
         print(f"  -> Predicted category: {predict_one(m, a)}\n")
+
+        
+def csv_batch(path):
+    df = pd.read_csv(path)
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.columns = [c.strip() for c in df.columns]
+
+    df = df.rename(columns={
+        "Description": "merchant",
+        "Amount": "amount",
+    })
+
+    out = predict_batch(df)
+    out_path = os.path.join(OUTPUT_DIR, "predictions.csv")
+    out.to_csv(out_path, index=False)
+    print(f"Predictions saved: {out_path}")
+    print(out.head(20).to_string(index=False))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        csv_batch(sys.argv[1])
+    else:
+        interactive()
