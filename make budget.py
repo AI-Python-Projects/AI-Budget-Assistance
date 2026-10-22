@@ -141,3 +141,44 @@ avg_png = os.path.join(OUTPUT_DIR, "budget_avg_monthly_spend.png")
 plt.savefig(avg_png, bbox_inches="tight")
 plt.close()
 print(f"[Chart saved] {avg_png}")
+
+
+# =====================================================================
+# 5. Compute budget = avg × buffer
+# =====================================================================
+budget = (avg * BUFFER).round(0).astype(int).reset_index()
+budget.columns = ["category", "monthly_budget"]
+budget = budget.sort_values("category").reset_index(drop=True)
+
+# Add comparison columns
+compare = pd.DataFrame({
+    "category":          budget["category"],
+    "avg_spend":         avg.reindex(budget["category"]).values,
+    "buffer_%":          [f"+{int((BUFFER - 1) * 100)}%"] * len(budget),
+    "budget (R)":        budget["monthly_budget"].values,
+    "increase (R)":      (budget["monthly_budget"].values
+                          - avg.reindex(budget["category"]).values).round(2),
+})
+show_table("Budget Derivation (avg × 1.10)", compare)
+
+# =====================================================================
+# 6. Chart — avg vs budget side by side
+# =====================================================================
+fig, ax = plt.subplots(figsize=(12, max(5, 0.45 * len(budget))))
+y = np.arange(len(budget))
+h = 0.4
+ax.barh(y - h/2, avg.reindex(budget["category"]).values,
+        height=h, label="Avg spend", color="#4C72B0")
+ax.barh(y + h/2, budget["monthly_budget"].values,
+        height=h, label=f"Budget (×{BUFFER})", color="#DD8452")
+ax.set_yticks(y)
+ax.set_yticklabels(budget["category"])
+ax.set_xlabel("R")
+ax.set_title("Average Spend vs Recommended Budget",
+             fontsize=14, fontweight="bold")
+ax.legend()
+plt.tight_layout()
+cmp_png = os.path.join(OUTPUT_DIR, "budget_avg_vs_budget.png")
+plt.savefig(cmp_png, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {cmp_png}")
