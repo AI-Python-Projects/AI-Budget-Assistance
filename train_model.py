@@ -257,3 +257,105 @@ cm_path = os.path.join(OUTPUT_DIR, "confusion_matrix.png")
 plt.savefig(cm_path, bbox_inches="tight")
 plt.close()
 print(f"\n[Chart saved] {cm_path}")
+
+# =====================================================================
+# 11. Graph: Per-class F1 scores
+# =====================================================================
+per_class = report_df[report_df["class"].isin(labels)][["class", "precision",
+                                                        "recall", "f1-score"]]
+per_class_melt = per_class.melt(id_vars="class",
+                                var_name="metric", value_name="score")
+
+fig, ax = plt.subplots(figsize=(13, 8))
+sns.barplot(data=per_class_melt, x="score", y="class",
+            hue="metric", palette="Set2", ax=ax)
+ax.set_title("Precision / Recall / F1 per Category (Test Set)",
+             fontsize=14, fontweight="bold")
+ax.set_xlim(0, 1.05)
+ax.set_xlabel("Score")
+ax.set_ylabel("")
+ax.legend(loc="lower right")
+plt.tight_layout()
+f1_path = os.path.join(OUTPUT_DIR, "per_class_scores.png")
+plt.savefig(f1_path, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {f1_path}")
+
+# =====================================================================
+# 12. Graph: Feature importance (top-N numeric + top-N merchant n-grams)
+# =====================================================================
+try:
+    classifier = best_clf.named_steps["classifier"]
+    pre = best_clf.named_steps["preprocessor"]
+
+    # Names from the ColumnTransformer
+    tfidf_names = pre.named_transformers_["merchant_tfidf"].get_feature_names_out()
+    num_names   = numeric_cols
+    feature_names = np.concatenate([tfidf_names, num_names])
+
+    importances = classifier.feature_importances_
+    top_n = 25
+    idx = np.argsort(importances)[-top_n:]
+
+    imp_df = pd.DataFrame({
+        "feature": feature_names[idx],
+        "importance": importances[idx],
+    })
+
+    show_table(f"Top {top_n} Most Important Features",
+               imp_df.sort_values("importance", ascending=False))
+
+    fig, ax = plt.subplots(figsize=(11, 8))
+    sns.barplot(data=imp_df, x="importance", y="feature",
+                palette="crest", ax=ax)
+    ax.set_title(f"Top {top_n} Feature Importances", fontsize=14, fontweight="bold")
+    ax.set_xlabel("Importance")
+    ax.set_ylabel("")
+    plt.tight_layout()
+    fi_path = os.path.join(OUTPUT_DIR, "feature_importance.png")
+    plt.savefig(fi_path, bbox_inches="tight")
+    plt.close()
+    print(f"[Chart saved] {fi_path}")
+except Exception as e:
+    print(f"(Feature-importance chart skipped: {e})")
+
+# =====================================================================
+# 13. Cross-validation
+# =====================================================================
+print("\n" + "=" * 70)
+print("Running 5-fold cross-validation on full dataset...")
+cv_scores = cross_val_score(best_clf, df.drop(columns=["category", "date"]),
+                            df["category"], cv=5)
+
+cv_table = pd.DataFrame({
+    "fold":     [1, 2, 3, 4, 5],
+    "accuracy": np.round(cv_scores, 4),
+})
+show_table("5-Fold Cross-Validation", cv_table)
+print(f"Mean CV accuracy: {cv_scores.mean():.4f}  (± {cv_scores.std():.4f})")
+
+# CV scores plot
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.barplot(x=[f"Fold {i+1}" for i in range(len(cv_scores))],
+            y=cv_scores, palette="viridis", ax=ax)
+ax.axhline(cv_scores.mean(), color="red", linestyle="--",
+           label=f"Mean = {cv_scores.mean():.4f}")
+ax.set_ylim(0, 1.05)
+ax.set_ylabel("Accuracy")
+ax.set_title("Cross-Validation Accuracy per Fold",
+             fontsize=13, fontweight="bold")
+ax.legend()
+plt.tight_layout()
+cv_path = os.path.join(OUTPUT_DIR, "cv_scores.png")
+plt.savefig(cv_path, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {cv_path}")
+
+# =====================================================================
+# 14. Save model
+# =====================================================================
+joblib.dump(best_clf, MODEL_PATH)
+print(f"\n{'=' * 70}")
+print(f"Model saved at: {MODEL_PATH}")
+print(f"All charts saved under: {OUTPUT_DIR}")
+print("=" * 70)
