@@ -265,3 +265,39 @@ show_table("Misclassified Transactions (sample of up to 30)",
 err_path = os.path.join(OUTPUT_DIR, "test_misclassified.csv")
 error_df.to_csv(err_path, index=False)
 print(f"\nFull error list saved: {err_path}")
+
+# =====================================================================
+# 10. Save summary files
+# =====================================================================
+report_path = os.path.join(OUTPUT_DIR, "classification_report.txt")
+cm_path     = os.path.join(OUTPUT_DIR, "confusion_matrix.csv")
+cm_norm_path= os.path.join(OUTPUT_DIR, "confusion_matrix_normalised.csv")
+metrics_path= os.path.join(OUTPUT_DIR, "test_metrics.csv")
+
+with open(report_path, "w") as f:
+    f.write(f"Accuracy : {acc:.4f}\n")
+    f.write(f"Precision: {prec:.4f}\n")
+    f.write(f"Recall   : {rec:.4f}\n")
+    f.write(f"F1       : {f1:.4f}\n\n")
+    f.write(report_text)
+
+cm_df.to_csv(cm_path)
+cm_norm.to_csv(cm_norm_path)
+metrics_table.to_csv(metrics_path, index=False)
+
+print(f"\n{'=' * 70}")
+print("SUMMARY OF OUTPUTS")
+print("=" * 70)
+for label, p in [
+    ("Report            ", report_path),
+    ("Confusion matrix  ", cm_path),
+    ("Confusion (norm)  ", cm_norm_path),
+    ("Metrics           ", metrics_path),
+    ("Misclassified     ", err_path),
+    ("CM chart          ", cm_png),
+    ("CM chart (norm)   ", cm_norm_png),
+    ("Per-class scores  ", per_class_png),
+    ("Actual vs predict ", counts_png),
+]:
+    print(f"  {label} {p}")
+print("=" * 70)
