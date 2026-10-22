@@ -182,3 +182,44 @@ cmp_png = os.path.join(OUTPUT_DIR, "budget_avg_vs_budget.png")
 plt.savefig(cmp_png, bbox_inches="tight")
 plt.close()
 print(f"[Chart saved] {cmp_png}")
+
+# =====================================================================
+# 7. Chart — pie of budget share
+# =====================================================================
+fig, ax = plt.subplots(figsize=(9, 9))
+ax.pie(budget["monthly_budget"],
+       labels=budget["category"],
+       autopct="%1.1f%%",
+       startangle=140,
+       textprops={"fontsize": 9})
+ax.set_title("Share of Total Monthly Budget",
+             fontsize=14, fontweight="bold")
+plt.tight_layout()
+pie_png = os.path.join(OUTPUT_DIR, "budget_share_pie.png")
+plt.savefig(pie_png, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {pie_png}")
+
+# =====================================================================
+# 8. Save budget.csv
+# =====================================================================
+budget.to_csv(BUDGET_CSV_PATH, index=False)
+
+totals = pd.DataFrame({
+    "metric": ["total monthly budget", "highest single category",
+               "lowest single category", "avg per category"],
+    "value": [
+        f"R{budget['monthly_budget'].sum():,.2f}",
+        f"{budget.loc[budget['monthly_budget'].idxmax(), 'category']} "
+        f"(R{budget['monthly_budget'].max():,.2f})",
+        f"{budget.loc[budget['monthly_budget'].idxmin(), 'category']} "
+        f"(R{budget['monthly_budget'].min():,.2f})",
+        f"R{budget['monthly_budget'].mean():,.2f}",
+    ],
+})
+show_table("Budget Totals", totals)
+
+print(f"\n{'=' * 70}")
+print(f"Budget saved at: {BUDGET_CSV_PATH}  ({len(budget)} categories)")
+print(f"All charts saved under: {OUTPUT_DIR}")
+print("=" * 70)
