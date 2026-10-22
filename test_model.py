@@ -151,3 +151,117 @@ plt.savefig(cm_norm_png, bbox_inches="tight")
 plt.close()
 print(f"[Chart saved] {cm_norm_png}")
 
+# =====================================================================
+# 6. Per-class bar chart (precision / recall / f1)
+# =====================================================================
+per_class = report_df[report_df["class"].isin(labels)][
+    ["class", "precision", "recall", "f1-score"]
+]
+per_class_melt = per_class.melt(
+    id_vars="class", var_name="metric", value_name="score"
+)
+
+fig, ax = plt.subplots(figsize=(13, max(6, 0.45 * len(labels))))
+sns.barplot(data=per_class_melt, x="score", y="class",
+            hue="metric", palette="Set2", ax=ax)
+ax.set_title("Precision / Recall / F1 per Category (Test Set)",
+             fontsize=14, fontweight="bold")
+ax.set_xlim(0, 1.05)
+ax.set_xlabel("Score")
+ax.set_ylabel("")
+ax.legend(loc="lower right")
+plt.tight_layout()
+per_class_png = os.path.join(OUTPUT_DIR, "test_per_class_scores.png")
+plt.savefig(per_class_png, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {per_class_png}")
+
+# =====================================================================
+# 7. Actual vs Predicted distribution
+# =====================================================================
+actual_counts    = y_true.value_counts().reindex(labels).fillna(0)
+predicted_counts = pd.Series(y_pred).value_counts().reindex(labels).fillna(0)
+
+compare_df = pd.DataFrame({
+    "category":  labels,
+    "actual":    actual_counts.values.astype(int),
+    "predicted": predicted_counts.values.astype(int),
+    "diff":      (predicted_counts.values - actual_counts.values).astype(int),
+})
+show_table("Actual vs Predicted Counts", compare_df)
+
+comp_long = compare_df.melt(id_vars="category",
+                            value_vars=["actual", "predicted"],
+                            var_name="type", value_name="count")
+
+fig, ax = plt.subplots(figsize=(13, max(6, 0.45 * len(labels))))
+sns.barplot(data=comp_long, y="category", x="count",
+            hue="type", palette="coolwarm", ax=ax)
+ax.set_title("Actual vs Predicted Category Counts",
+             fontsize=14, fontweight="bold")
+ax.set_xlabel("Number of transactions")
+ax.set_ylabel("")
+plt.tight_layout()
+counts_png = os.path.join(OUTPUT_DIR, "test_actual_vs_predicted.png")
+plt.savefig(counts_png, bbox_inches="tight")
+plt.close()
+print(f"[Chart saved] {counts_png}")
+
+# =====================================================================
+# 8. Confidence of predictions
+# =====================================================================
+try:
+    if hasattr(model, "predict_proba"):
+        proba = model.predict_proba(X_test)
+        confidence = proba.max(axis=1)
+
+        conf_df = pd.DataFrame({
+            "stat":  ["min", "25%", "median", "mean", "75%", "max"],
+            "confidence": [
+                round(float(np.min(confidence)), 4),
+                round(float(np.percentile(confidence, 25)), 4),
+                round(float(np.median(confidence)), 4),
+                round(float(np.mean(confidence)), 4),
+                round(float(np.percentile(confidence, 75)), 4),
+                round(float(np.max(confidence)), 4),
+            ],
+        })
+        show_table("Prediction Confidence (max probability)", conf_df)
+
+        fig, ax = plt.subplots(figsize=(9, 5))
+        sns.histplot(confidence, bins=20, kde=True,
+                     color="#4C72B0", ax=ax)
+        ax.axvline(float(np.mean(confidence)),
+                   color="red", linestyle="--",
+                   label=f"Mean = {np.mean(confidence):.3f}")
+        ax.set_title("Distribution of Prediction Confidence",
+                     fontsize=14, fontweight="bold")
+        ax.set_xlabel("Max predicted probability")
+        ax.set_ylabel("Number of test samples")
+        ax.legend()
+        plt.tight_layout()
+        conf_png = os.path.join(OUTPUT_DIR, "test_confidence_distribution.png")
+        plt.savefig(conf_png, bbox_inches="tight")
+        plt.close()
+        print(f"[Chart saved] {conf_png}")
+except Exception as e:
+    print(f"(Confidence chart skipped: {e})")
+
+# =====================================================================
+# 9. Errors breakdown — which categories get confused the most
+# =====================================================================
+wrong = y_true != y_pred
+error_df = pd.DataFrame({
+    "merchant":  X_test["merchant"].astype(str).values[wrong],
+    "amount":    X_test["amount"].values[wrong],
+    "actual":    y_true.values[wrong],
+    "predicted": np.asarray(y_pred)[wrong],
+})
+error_df = error_df.sort_values("actual").reset_index(drop=True)
+
+show_table("Misclassified Transactions (sample of up to 30)",
+           error_df.head(30))
+
+err_path = os.path.join(OUTPUT_DIR, "test_misclassified.csv")
+error_df.to_csv(err_path, index=False)
+print(f"\nFull error list saved: {err_path}")
