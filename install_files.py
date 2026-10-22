@@ -236,3 +236,349 @@ cm_df.to_csv(cm_path)
 print(f"\nReport saved: {report_path}")
 print(f"Confusion matrix saved: {cm_path}")
 '''
+
+
+# =====================================================================
+# predict.py
+# =====================================================================
+FILES["predict.py"] = r'''import os
+import sys
+import pandas as pd
+import joblib
+
+from config import MODEL_PATH, OUTPUT_DIR
+
+model = joblib.load(MODEL_PATH)
+
+FEATURES = ["merchant", "amount",
+            "day_of_month", "day_of_week", "is_weekend", "is_month_end"]
+
+
+def predict_one(merchant, amount,
+                day_of_month=15, day_of_week=2,
+                is_weekend=0, is_month_end=0):
+    row = {
+        "merchant": merchant, "amount": amount,
+        "day_of_month": day_of_month, "day_of_week": day_of_week,
+        "is_weekend": is_weekend, "is_month_end": is_month_end,
+    }
+    return model.predict(pd.DataFrame([row]))[0]
+
+
+def predict_batch(df):
+    for col, default in [
+        ("day_of_month", 15), ("day_of_week", 2),
+        ("is_weekend", 0), ("is_month_end", 0),
+    ]:
+        if col not in df.columns:
+            df[col] = default
+    df["predicted_category"] = model.predict(df[FEATURES])
+    return df
+
+
+def interactive():
+    print("\n=== PREDICT MODE ===")
+    print("Type 'done' when finished.\n")
+    while True:
+        m = input("Merchant : ").strip()
+        if m.lower() == "done":
+            break
+        try:
+            a = float(input("Amount   : ").strip())
+        except ValueError:
+            print("Invalid amount.\n")
+            continue
+        print(f"  -> Predicted category: {predict_one(m, a)}\n")
+
+
+def csv_batch(path):
+    df = pd.read_csv(path)
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.columns = [c.strip() for c in df.columns]
+
+    df = df.rename(columns={
+        "Description": "merchant",
+        "Amount": "amount",
+    })
+
+    out = predict_batch(df)
+    out_path = os.path.join(OUTPUT_DIR, "predictions.csv")
+    out.to_csv(out_path, index=False)
+    print(f"Predictions saved: {out_path}")
+    print(out.head(20).to_string(index=False))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        csv_batch(sys.argv[1])
+    else:
+        interactive()
+'''
+
+
+# =====================================================================
+# make_budget.py
+# =====================================================================
+FILES["make_budget.py"] = r'''import pandas as pd
+
+from config import TRAIN_CSV_PATH, BUDGET_CSV_PATH
+from preprocessing import load_and_prepare
+
+df = load_and_prepare(TRAIN_CSV_PATH)
+
+df["month"] = df["date"].dt.to_period("M")
+
+monthly = df.groupby(["month", "category"])["amount"].sum().reset_index()
+avg = monthly.groupby("category")["amount"].mean().round(2)
+
+budget = (avg * 1.10).round(0).astype(int).reset_index()
+budget.columns = ["category", "monthly_budget"]
+budget = budget.sort_values("category")
+
+budget.to_csv(BUDGET_CSV_PATH, index=False)
+
+print(f"Wrote {len(budget)} categories to: {BUDGET_CSV_PATH}\n")
+print(budget.to_string(index=False))
+'''
+
+
+# =====================================================================
+# budget_assistant.py
+# =====================================================================
+FILES["budget_assistant.py"] = r'''import sys
+import pandas as pd
+
+from config import BUDGET_CSV_PATH, WARN_THRESHOLD, DANGER_THRESHOLD
+from predict import predict_one
+
+budget_df = pd.read_csv(BUDGET_CSV_PATH)
+budget_df.columns = [c.strip().lower() for c in budget_df.columns]
+BUDGET = dict(zip(budget_df["category"], budget_df["monthly_budget"]))
+
+
+def money(v):
+    return f"R{v:,.2f}"
+
+
+def analyse(transactions):
+    totals = {cat: 0.0 for cat in BUDGET}
+    details = []
+
+    for t in transactions:
+        cat = predict_one(
+            t["merchant"], float(t["amount"]),
+            t.get("day_of_month", 15), t.get("day_of_week", 2),
+            t.get("is_weekend", 0), t.get("is_month_end", 0),
+        )
+        totals[cat] = totals.get(cat, 0.0) + float(t["amount"])
+        details.append({**t, "category": cat})
+
+    alerts = []
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        if budget <= 0:
+            continue
+        ratio = spent / budget
+        remaining = budget - spent
+        if ratio >= DANGER_THRESHOLD:
+            alerts.append(f"OVER BUDGET  - {cat}: spent {money(spent)} of "
+                          f"{money(budget)} (over by {money(abs(remaining))})")
+        elif ratio >= WARN_THRESHOLD:
+            alerts.append(f"APPROACHING - {cat}: spent {money(spent)} of "
+                          f"{money(budget)} (remaining {money(remaining)})")
+
+    return {"details": details, "totals": totals, "alerts": alerts}
+
+
+def report(result):
+    print("\n========== AI BUDGET ASSISTANT REPORT ==========")
+    print("\n--- Categorised Transactions ---")
+    for d in result["details"]:
+        print(f"  {d['merchant']:<30} {money(d['amount']):>12}  ->  {d['category']}")
+
+    print("\n--- Budget Summary ---")
+    total_spent = total_budget = 0.0
+    for cat, spent in result["totals"].items():
+        budget = BUDGET.get(cat, 0)
+        total_spent  += spent
+        total_budget += budget
+        pct = (spent / budget * 100) if budget else 0
+        print(f"  {cat:<22} Spent {money(spent):>12} / Budget {money(budget):>12}  ({pct:5.1f}%)")
+
+    print(f"\n  TOTAL SPENT : {money(total_spent)} / {money(total_budget)}")
+    print(f"  REMAINING   : {money(total_budget - total_spent)}")
+
+    print("\n--- Alerts ---")
+    if result["alerts"]:
+        for a in result["alerts"]:
+            print(" ", a)
+    else:
+        print("  All categories within budget.")
+
+
+def interactive():
+    print("\n=== AI BUDGET ASSISTANT (interactive) ===")
+    print("Type 'done' when finished.\n")
+    txns = []
+    while True:
+        m = input("Merchant : ").strip()
+        if m.lower() == "done":
+            break
+        try:
+            a = float(input("Amount   : ").strip())
+        except ValueError:
+            print("Invalid amount.\n")
+            continue
+        txns.append({"merchant": m, "amount": a})
+        print("Added.\n")
+    report(analyse(txns))
+
+
+def csv_batch(path):
+    df = pd.read_csv(path)
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.columns = [c.strip() for c in df.columns]
+    df = df.rename(columns={"Description": "merchant", "Amount": "amount"})
+    if "Transaction Type" in df.columns:
+        df = df[df["Transaction Type"].str.lower() == "debit"]
+    report(analyse(df.to_dict(orient="records")))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        csv_batch(sys.argv[1])
+    else:
+        interactive()
+'''
+
+
+# =====================================================================
+# app.py  (Streamlit)
+# =====================================================================
+FILES["app.py"] = r'''import pandas as pd
+import streamlit as st
+
+from config import BUDGET_CSV_PATH, WARN_THRESHOLD, DANGER_THRESHOLD
+from predict import predict_one
+
+st.set_page_config(page_title="AI Budget Assistant", page_icon="", layout="wide")
+st.title("AI Budget Assistant")
+
+budget_df = pd.read_csv(BUDGET_CSV_PATH)
+budget_df.columns = [c.strip().lower() for c in budget_df.columns]
+BUDGET = dict(zip(budget_df["category"], budget_df["monthly_budget"]))
+
+
+def money(v):
+    return f"R{v:,.2f}"
+
+
+st.subheader("1. Enter Transactions")
+default = pd.DataFrame({
+    "merchant": ["Netflix", "Thai Restaurant", "Gas Company"],
+    "amount":   [11.76, 24.22, 45.00],
+})
+edited = st.data_editor(default, num_rows="dynamic", use_container_width=True)
+
+if st.button("Analyse Spending", type="primary"):
+    txns = [t for t in edited.to_dict(orient="records")
+            if t["merchant"] and t["amount"] > 0]
+
+    totals = {cat: 0.0 for cat in BUDGET}
+    rows = []
+    for t in txns:
+        cat = predict_one(t["merchant"], float(t["amount"]))
+        totals[cat] = totals.get(cat, 0.0) + float(t["amount"])
+        rows.append({"Merchant": t["merchant"],
+                     "Amount (R)": round(float(t["amount"]), 2),
+                     "Category": cat})
+
+    st.subheader("2. Categorised Transactions")
+    st.dataframe(pd.DataFrame(rows), use_container_width=True)
+
+    st.subheader("3. Budget Summary")
+    summary = []
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        pct = (spent / budget * 100) if budget else 0
+        summary.append({
+            "Category": cat,
+            "Spent (R)": round(spent, 2),
+            "Budget (R)": budget,
+            "Remaining (R)": round(budget - spent, 2),
+            "% Used": round(pct, 1),
+        })
+    st.dataframe(pd.DataFrame(summary), use_container_width=True)
+
+    st.subheader("4. Alerts")
+    any_alert = False
+    for cat, spent in totals.items():
+        budget = BUDGET.get(cat, 0)
+        if budget <= 0:
+            continue
+        ratio = spent / budget
+        if ratio >= DANGER_THRESHOLD:
+            st.error(f"OVER BUDGET - {cat}: {money(spent)} of {money(budget)}")
+            any_alert = True
+        elif ratio >= WARN_THRESHOLD:
+            st.warning(f"Approaching - {cat}: {money(spent)} of {money(budget)}")
+            any_alert = True
+    if not any_alert:
+        st.success("All categories within budget.")
+'''
+
+
+# =====================================================================
+# inspect_data.py
+# =====================================================================
+FILES["inspect_data.py"] = r'''import pandas as pd
+from config import TRAIN_CSV_PATH
+
+print("Reading:", TRAIN_CSV_PATH)
+df = pd.read_csv(TRAIN_CSV_PATH)
+
+print("\n--- Columns ---")
+for i, c in enumerate(df.columns):
+    print(f"  {i}: {c!r}")
+
+print("\n--- Shape ---")
+print(df.shape)
+
+print("\n--- First 10 rows ---")
+print(df.head(10).to_string())
+
+print("\n--- Dtypes ---")
+print(df.dtypes)
+
+print("\n--- Missing values ---")
+print(df.isnull().sum())
+'''
+
+
+# =====================================================================
+# requirements.txt
+# =====================================================================
+FILES["requirements.txt"] = r'''pandas
+numpy
+scikit-learn
+joblib
+streamlit
+'''
+
+
+# =====================================================================
+# WRITE ALL FILES
+# =====================================================================
+print("Writing project files to:", BASE)
+for name, content in FILES.items():
+    path = BASE / name
+    path.write_text(content, encoding="utf-8")
+    print(f"  wrote {name}")
+
+print("\nDone. All files created.")
+print("\nNext steps:")
+print("  1.  python train_model.py")
+print("  2.  python test_model.py")
+print("  3.  python make_budget.py")
+print("  4.  python budget_assistant.py")
+print("  5.  python -m streamlit run app.py")
