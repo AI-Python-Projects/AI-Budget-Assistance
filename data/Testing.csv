@@ -1,0 +1,138 @@
+Date,merchant,amount,Transaction Type,category,Account Name,date,day_of_month,day_of_week,is_weekend,is_month_end
+12/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-12-01,1,5,1,0
+09/30/2019,Internet Service Provider,75.0,debit,Internet,Checking,2019-09-30,30,0,0,1
+04/06/2018,Chevron,4.58,debit,Gas & Fuel,Platinum Card,2018-04-06,6,4,0,0
+03/29/2018,Steakhouse,17.64,debit,Restaurants,Silver Card,2018-03-29,29,3,0,1
+12/13/2018,Thai Restaurant,27.0,debit,Restaurants,Silver Card,2018-12-13,13,3,0,0
+03/05/2018,Starbucks,3.0,debit,Coffee Shops,Platinum Card,2018-03-05,5,0,0,0
+07/18/2019,State Farm,75.0,debit,Auto Insurance,Checking,2019-07-18,18,3,0,0
+03/19/2019,City Water Charges,35.0,debit,Utilities,Checking,2019-03-19,19,1,0,0
+11/13/2018,Phone Company,89.54,debit,Mobile Phone,Checking,2018-11-13,13,1,0,0
+06/12/2018,Grocery Store,12.55,debit,Groceries,Platinum Card,2018-06-12,12,1,0,0
+08/23/2019,Starbucks,2.75,debit,Coffee Shops,Platinum Card,2019-08-23,23,4,0,0
+03/26/2019,Amazon,16.04,debit,Shopping,Platinum Card,2019-03-26,26,1,0,1
+01/15/2018,Grocery Store,44.19,debit,Groceries,Silver Card,2018-01-15,15,0,0,0
+09/12/2018,Phone Company,89.4,debit,Mobile Phone,Checking,2018-09-12,12,2,0,0
+09/17/2019,Power Company,60.0,debit,Utilities,Checking,2019-09-17,17,1,0,0
+01/03/2019,Mortgage Payment,1100.0,debit,Mortgage & Rent,Checking,2019-01-03,3,3,0,0
+06/09/2018,Spotify,10.69,debit,Music,Platinum Card,2018-06-09,9,5,1,0
+09/23/2019,Grocery Store,27.71,debit,Groceries,Platinum Card,2019-09-23,23,0,0,0
+10/23/2018,Grocery Store,7.57,debit,Groceries,Platinum Card,2018-10-23,23,1,0,0
+03/14/2019,Credit Card Payment,305.27,debit,Credit Card Payment,Checking,2019-03-14,14,3,0,0
+11/19/2018,Brewing Company,20.0,debit,Alcohol & Bars,Silver Card,2018-11-19,19,0,0,0
+01/16/2019,Power Company,60.0,debit,Utilities,Checking,2019-01-16,16,2,0,0
+10/04/2018,Netflix,11.76,debit,Movies & DVDs,Platinum Card,2018-10-04,4,3,0,0
+12/26/2018,Chick-Fil-A,56.07,debit,Fast Food,Platinum Card,2018-12-26,26,2,0,1
+07/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-07-01,1,6,1,0
+05/20/2019,American Tavern,32.53,debit,Restaurants,Silver Card,2019-05-20,20,0,0,0
+12/14/2018,Power Company,60.0,debit,Utilities,Checking,2018-12-14,14,4,0,0
+09/11/2018,BP,38.86,debit,Gas & Fuel,Platinum Card,2018-09-11,11,1,0,0
+04/08/2018,Irish Pub,22.0,debit,Restaurants,Platinum Card,2018-04-08,8,6,1,0
+05/06/2019,Amazon,16.94,debit,Shopping,Platinum Card,2019-05-06,6,0,0,0
+02/15/2018,Power Company,60.0,debit,Utilities,Checking,2018-02-15,15,3,0,0
+06/20/2018,Barbershop,30.0,debit,Haircut,Silver Card,2018-06-20,20,2,0,0
+03/04/2018,BBQ Restaurant,42.24,debit,Restaurants,Platinum Card,2018-03-04,4,6,1,0
+05/25/2019,QuikTrip,36.76,debit,Gas & Fuel,Platinum Card,2019-05-25,25,5,1,1
+05/06/2018,Amazon,117.69,debit,Shopping,Platinum Card,2018-05-06,6,6,1,0
+04/19/2019,Credit Card Payment,604.32,debit,Credit Card Payment,Checking,2019-04-19,19,4,0,0
+07/30/2018,American Tavern,34.38,debit,Restaurants,Silver Card,2018-07-30,30,0,0,1
+08/17/2019,American Tavern,3.5,debit,Restaurants,Platinum Card,2019-08-17,17,5,1,0
+03/26/2018,Internet Service Provider,74.99,debit,Internet,Checking,2018-03-26,26,0,0,1
+08/15/2018,Power Company,60.0,debit,Utilities,Checking,2018-08-15,15,2,0,0
+12/18/2018,Starbucks,3.0,debit,Coffee Shops,Silver Card,2018-12-18,18,1,0,0
+01/09/2019,Spotify,10.69,debit,Music,Platinum Card,2019-01-09,9,2,0,0
+07/05/2019,Brewing Company,19.0,debit,Alcohol & Bars,Silver Card,2019-07-05,5,4,0,0
+06/19/2018,Shell,38.52,debit,Gas & Fuel,Platinum Card,2018-06-19,19,1,0,0
+12/14/2018,Hardware Store,17.1,debit,Home Improvement,Silver Card,2018-12-14,14,4,0,0
+08/20/2019,State Farm,75.0,debit,Auto Insurance,Checking,2019-08-20,20,1,0,0
+03/04/2019,Grocery Store,92.04,debit,Groceries,Silver Card,2019-03-04,4,0,0,0
+10/28/2018,Brewing Company,12.71,debit,Alcohol & Bars,Platinum Card,2018-10-28,28,6,1,1
+04/13/2018,American Tavern,10.66,debit,Restaurants,Platinum Card,2018-04-13,13,4,0,0
+01/10/2019,Barbershop,30.0,debit,Haircut,Silver Card,2019-01-10,10,3,0,0
+04/25/2018,Hardware Store,210.79,debit,Home Improvement,Silver Card,2018-04-25,25,2,0,1
+07/21/2018,Barbershop,30.0,debit,Haircut,Platinum Card,2018-07-21,21,5,1,0
+08/02/2019,Mortgage Payment,1100.0,debit,Mortgage & Rent,Checking,2019-08-02,2,4,0,0
+05/24/2019,Brunch Restaurant,8.0,debit,Restaurants,Platinum Card,2019-05-24,24,4,0,0
+02/16/2018,Brunch Restaurant,8.0,debit,Restaurants,Silver Card,2018-02-16,16,4,0,0
+10/10/2018,Grocery Store,53.68,debit,Groceries,Silver Card,2018-10-10,10,2,0,0
+05/04/2019,Netflix,13.9,debit,Television,Platinum Card,2019-05-04,4,5,1,0
+07/04/2019,Netflix,13.9,debit,Television,Platinum Card,2019-07-04,4,3,0,0
+04/12/2018,Starbucks,7.0,debit,Coffee Shops,Platinum Card,2018-04-12,12,3,0,0
+09/07/2018,Gas Company,30.0,debit,Utilities,Checking,2018-09-07,7,4,0,0
+07/18/2019,Credit Card Payment,814.5,debit,Credit Card Payment,Checking,2019-07-18,18,3,0,0
+08/21/2018,Credit Card Payment,99.76,debit,Credit Card Payment,Checking,2018-08-21,21,1,0,0
+06/08/2018,Gas Company,30.0,debit,Utilities,Checking,2018-06-08,8,4,0,0
+02/15/2019,Credit Card Payment,207.47,debit,Credit Card Payment,Checking,2019-02-15,15,4,0,0
+01/08/2018,Hardware Store,15.38,debit,Home Improvement,Silver Card,2018-01-08,8,0,0,0
+12/06/2018,Grocery Store,21.38,debit,Groceries,Platinum Card,2018-12-06,6,3,0,0
+01/25/2018,Internet Service Provider,69.99,debit,Internet,Checking,2018-01-25,25,3,0,1
+07/02/2018,Movie Theater,25.0,debit,Movies & DVDs,Silver Card,2018-07-02,2,0,0,0
+11/03/2018,Pizza Place,23.66,debit,Fast Food,Platinum Card,2018-11-03,3,5,1,0
+07/23/2018,Starbucks,9.58,debit,Fast Food,Platinum Card,2018-07-23,23,0,0,0
+08/08/2019,Grocery Store,11.72,debit,Groceries,Silver Card,2019-08-08,8,3,0,0
+06/06/2019,Grocery Store,5.64,debit,Groceries,Platinum Card,2019-06-06,6,3,0,0
+05/13/2019,Fancy Restaurant,98.19,debit,Restaurants,Silver Card,2019-05-13,13,0,0,0
+03/30/2019,Starbucks,12.84,debit,Coffee Shops,Platinum Card,2019-03-30,30,5,1,1
+07/17/2018,Power Company,60.0,debit,Utilities,Checking,2018-07-17,17,1,0,0
+08/02/2018,Mortgage Payment,1247.44,debit,Mortgage & Rent,Checking,2018-08-02,2,3,0,0
+01/02/2018,Thai Restaurant,24.22,debit,Restaurants,Silver Card,2018-01-02,2,1,0,0
+10/28/2018,Grocery Store,92.49,debit,Groceries,Platinum Card,2018-10-28,28,6,1,1
+03/09/2019,Spotify,10.69,debit,Music,Platinum Card,2019-03-09,9,5,1,0
+09/06/2019,Credit Card Payment,1390.37,debit,Credit Card Payment,Checking,2019-09-06,6,4,0,0
+01/02/2018,Mortgage Payment,1247.44,debit,Mortgage & Rent,Checking,2018-01-02,2,1,0,0
+01/10/2018,Phone Company,89.46,debit,Mobile Phone,Checking,2018-01-10,10,2,0,0
+04/21/2018,American Tavern,35.15,debit,Restaurants,Silver Card,2018-04-21,21,5,1,0
+11/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-11-01,1,3,0,0
+07/09/2018,Credit Card Payment,259.87,debit,Credit Card Payment,Checking,2018-07-09,9,0,0,0
+12/19/2018,Amazon,43.01,debit,Shopping,Platinum Card,2018-12-19,19,2,0,0
+06/14/2018,Credit Card Payment,283.44,debit,Credit Card Payment,Checking,2018-06-14,14,3,0,0
+10/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-10-01,1,0,0,0
+08/06/2019,Credit Card Payment,117.65,debit,Credit Card Payment,Checking,2019-08-06,6,1,0,0
+08/31/2018,Grocery Store,11.64,debit,Groceries,Platinum Card,2018-08-31,31,4,0,1
+05/13/2019,QuikTrip,35.24,debit,Gas & Fuel,Silver Card,2019-05-13,13,0,0,0
+05/04/2018,Netflix,11.76,debit,Movies & DVDs,Platinum Card,2018-05-04,4,4,0,0
+08/06/2019,Hardware Store,125.0,debit,Home Improvement,Checking,2019-08-06,6,1,0,0
+01/13/2018,Amazon,39.05,debit,Shopping,Platinum Card,2018-01-13,13,5,1,0
+05/24/2019,Hardware Store,27.96,debit,Home Improvement,Platinum Card,2019-05-24,24,4,0,0
+04/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-04-01,1,6,1,0
+06/04/2018,Credit Card Payment,235.18,debit,Credit Card Payment,Checking,2018-06-04,4,0,0,0
+04/13/2019,Grocery Store,16.87,debit,Groceries,Platinum Card,2019-04-13,13,5,1,0
+07/29/2019,Grocery Store,5.35,debit,Groceries,Platinum Card,2019-07-29,29,0,0,1
+11/10/2018,Food Truck,24.4,debit,Groceries,Platinum Card,2018-11-10,10,5,1,0
+07/14/2018,Go Mart,33.51,debit,Gas & Fuel,Silver Card,2018-07-14,14,5,1,0
+06/21/2019,Credit Card Payment,100.68,debit,Credit Card Payment,Checking,2019-06-21,21,4,0,0
+04/13/2019,Vietnamese Restaurant,20.64,debit,Restaurants,Platinum Card,2019-04-13,13,5,1,0
+01/29/2018,Shell,30.42,debit,Gas & Fuel,Silver Card,2018-01-29,29,0,0,1
+03/09/2018,Spotify,10.69,debit,Music,Platinum Card,2018-03-09,9,4,0,0
+08/10/2018,Phone Company,89.4,debit,Mobile Phone,Checking,2018-08-10,10,4,0,0
+02/20/2019,State Farm,75.0,debit,Auto Insurance,Checking,2019-02-20,20,2,0,0
+09/09/2018,Brewing Company,18.0,debit,Alcohol & Bars,Platinum Card,2018-09-09,9,6,1,0
+12/26/2018,Shell,32.47,debit,Gas & Fuel,Platinum Card,2018-12-26,26,2,0,1
+06/30/2019,Internet Service Provider,75.0,debit,Internet,Checking,2019-06-30,30,6,1,1
+04/18/2018,Power Company,60.0,debit,Utilities,Checking,2018-04-18,18,2,0,0
+08/06/2019,Credit Card Payment,521.17,debit,Credit Card Payment,Checking,2019-08-06,6,1,0,0
+12/17/2018,City Water Charges,35.0,debit,Utilities,Checking,2018-12-17,17,0,0,0
+11/19/2018,QuikTrip,29.15,debit,Gas & Fuel,Silver Card,2018-11-19,19,0,0,0
+12/03/2018,BP,30.03,debit,Gas & Fuel,Silver Card,2018-12-03,3,0,0,0
+01/02/2019,Credit Card Payment,499.6,debit,Credit Card Payment,Checking,2019-01-02,2,2,0,0
+05/01/2019,Amazon,13.09,debit,Shopping,Platinum Card,2019-05-01,1,2,0,0
+06/07/2019,Gas Company,30.0,debit,Utilities,Checking,2019-06-07,7,4,0,0
+04/22/2018,Grocery Store,21.32,debit,Groceries,Platinum Card,2018-04-22,22,6,1,0
+12/22/2018,Hardware Store,22.14,debit,Home Improvement,Platinum Card,2018-12-22,22,5,1,0
+03/20/2019,State Farm,75.0,debit,Auto Insurance,Checking,2019-03-20,20,2,0,0
+01/11/2018,Grocery Store,43.54,debit,Groceries,Platinum Card,2018-01-11,11,3,0,0
+07/02/2019,Hardware Store,229.9,debit,Home Improvement,Platinum Card,2019-07-02,2,1,0,0
+12/08/2018,Grocery Store,12.64,debit,Groceries,Platinum Card,2018-12-08,8,5,1,0
+04/02/2018,Credit Card Payment,817.14,debit,Credit Card Payment,Checking,2018-04-02,2,0,0,0
+06/16/2018,Starbucks,3.0,debit,Coffee Shops,Platinum Card,2018-06-16,16,5,1,0
+02/11/2019,BP,24.01,debit,Gas & Fuel,Platinum Card,2019-02-11,11,0,0,0
+09/01/2018,Amazon,13.13,debit,Shopping,Platinum Card,2018-09-01,1,5,1,0
+10/18/2018,Grocery Store,33.55,debit,Groceries,Platinum Card,2018-10-18,18,3,0,0
+02/01/2018,Grocery Store,27.79,debit,Groceries,Platinum Card,2018-02-01,1,3,0,0
+06/17/2019,City Water Charges,35.0,debit,Utilities,Checking,2019-06-17,17,0,0,0
+07/30/2019,Grocery Store,15.77,debit,Groceries,Platinum Card,2019-07-30,30,1,0,1
+05/13/2019,Greek Restaurant,23.11,debit,Restaurants,Silver Card,2019-05-13,13,0,0,0
+11/27/2018,Movie Theater,17.0,debit,Movies & DVDs,Silver Card,2018-11-27,27,1,0,1
+08/03/2019,American Tavern,23.47,debit,Restaurants,Platinum Card,2019-08-03,3,5,1,0
+04/29/2019,Grocery Store,5.64,debit,Groceries,Platinum Card,2019-04-29,29,0,0,1
+06/18/2019,Brewing Company,15.0,debit,Alcohol & Bars,Silver Card,2019-06-18,18,1,0,0
