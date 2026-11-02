@@ -1,0 +1,19 @@
+,Alcohol & Bars,Auto Insurance,Coffee Shops,Credit Card Payment,Fast Food,Gas & Fuel,Groceries,Haircut,Home Improvement,Internet,Mobile Phone,Mortgage & Rent,Movies & DVDs,Music,Restaurants,Shopping,Television,Utilities
+Alcohol & Bars,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Auto Insurance,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Coffee Shops,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Credit Card Payment,0,0,0,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Fast Food,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+Gas & Fuel,0,0,0,0,0,10,0,0,0,0,0,0,0,0,1,0,0,0
+Groceries,0,0,0,0,1,0,20,0,0,0,0,0,0,0,0,0,0,0
+Haircut,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0
+Home Improvement,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0
+Internet,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0
+Mobile Phone,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0
+Mortgage & Rent,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0
+Movies & DVDs,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0
+Music,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0
+Restaurants,0,0,0,0,1,0,0,0,0,0,0,0,0,0,15,0,0,0
+Shopping,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0
+Television,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0
+Utilities,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13
