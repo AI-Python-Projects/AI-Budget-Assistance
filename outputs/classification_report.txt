@@ -1,0 +1,29 @@
+Accuracy : 0.9562
+Precision: 0.9587
+Recall   : 0.9562
+F1       : 0.9556
+
+                     precision    recall  f1-score   support
+
+     Alcohol & Bars       1.00      1.00      1.00         5
+     Auto Insurance       1.00      1.00      1.00         4
+       Coffee Shops       0.86      1.00      0.92         6
+Credit Card Payment       1.00      1.00      1.00        14
+          Fast Food       0.33      0.33      0.33         3
+         Gas & Fuel       0.91      0.91      0.91        11
+          Groceries       1.00      0.95      0.98        21
+            Haircut       1.00      1.00      1.00         3
+   Home Improvement       1.00      1.00      1.00         7
+           Internet       1.00      1.00      1.00         4
+       Mobile Phone       1.00      1.00      1.00         4
+    Mortgage & Rent       1.00      1.00      1.00         4
+      Movies & DVDs       0.80      1.00      0.89         4
+              Music       1.00      1.00      1.00         4
+        Restaurants       0.94      0.94      0.94        16
+           Shopping       1.00      1.00      1.00        12
+         Television       1.00      0.50      0.67         2
+          Utilities       1.00      1.00      1.00        13
+
+           accuracy                           0.96       137
+          macro avg       0.94      0.92      0.92       137
+       weighted avg       0.96      0.96      0.96       137
