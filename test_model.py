@@ -2,7 +2,7 @@
 test_model.py
 Evaluates the trained AI Budget Assistantrich tables and saves charts to outputs/.
 model on Testing.csv.
-Prints 
+Prints rich tables and saves charts to outputs/.
 """ 
 
 import os
