@@ -47,7 +47,7 @@ def show_table(title, df):
     print(tabulate(df, headers="keys", tablefmt="fancy_grid",
                    floatfmt=",.2f", showindex=False))
 
-                   # =====================================================================
+# =====================================================================
 # Core analysis
 # =====================================================================
 def analyse(transactions):
